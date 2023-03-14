@@ -24,12 +24,8 @@ const Gameboard = () => {
       console.log("Cell is occupied!");
     }
   }
-  const printBoard = () => {
-    const boardWithCellValues = board.map((row => row.map(cell => cell.getValue())));
-    console.log(boardWithCellValues);
-  }
 
-  return {getBoard, putToken, printBoard};
+  return {getBoard, putToken};
 }
 
 const GameController = (
@@ -37,16 +33,16 @@ const GameController = (
   playerTwoName = "Player 2" 
 ) => 
 {
-  let board = Gameboard();  
+  let gameBoard = Gameboard();  
 
   const players = [
     {
       name: playerOneName,
-      token: 1
+      token: "X"
     },
     {
       name: playerTwoName,
-      token: 2
+      token: "O"
     }
   ];
 
@@ -54,7 +50,6 @@ const GameController = (
   const getActivePlayer = () => activePlayer;
 
   const printNewRound = () => {
-    board.printBoard();
     console.log(`${activePlayer.name} turn`);
   }
 
@@ -63,7 +58,7 @@ const GameController = (
   };
   
   const playRound = (row, column) => {
-    board.putToken(row, column, getActivePlayer().token);
+    gameBoard.putToken(row, column, getActivePlayer().token);
     let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
     if (isAWin) {
       finishGame();
@@ -76,12 +71,12 @@ const GameController = (
 
   const finishGame = () => {
     console.log(`${getActivePlayer().name} won!`);
-    // board = Gameboard();
+    // gameBoard = Gameboard();
   }
 
   const checkRows = (row) => {
     for (let i = 0; i < 3; i++) {
-      if (board.getBoard()[row][i].getValue() != getActivePlayer().token) {
+      if (gameBoard.getBoard()[row][i].getValue() != getActivePlayer().token) {
         return false;
       }
     }
@@ -90,7 +85,7 @@ const GameController = (
 
   const checkColumns = (column) => {
     for (let i = 0; i < 3; i++) {
-      if (board.getBoard()[i][column].getValue() != getActivePlayer().token) {
+      if (gameBoard.getBoard()[i][column].getValue() != getActivePlayer().token) {
         return false;
       }
     }
@@ -99,7 +94,7 @@ const GameController = (
 
   const checkDiagonalsLeft = () => { // from top-left to bottom-right
       for (let i = 0; i < 3; i++) {
-        if (board.getBoard()[i][i].getValue() != getActivePlayer().token) {
+        if (gameBoard.getBoard()[i][i].getValue() != getActivePlayer().token) {
           return false;
         }
       }
@@ -110,7 +105,7 @@ const GameController = (
   const checkDiagonalsRight = () => { // from top-right to bottom-left
       let i = 2;
       for (let j = 0; j < 3; j++) {
-        if (board.getBoard()[i][j].getValue() != getActivePlayer().token) {
+        if (gameBoard.getBoard()[i][j].getValue() != getActivePlayer().token) {
           return false;
         }
         i--;
@@ -120,6 +115,19 @@ const GameController = (
 
   printNewRound();
 
+  let display = document.querySelector('.display');
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      let cell = document.createElement('button');
+      cell.addEventListener('click', () => {
+        cell.textContent = getActivePlayer().token;
+        playRound(i, j);
+        cell.disabled = true; 
+      });
+      display.append(cell);
+    }
+  }
+  
   return {
     playRound,
     getActivePlayer
@@ -127,3 +135,4 @@ const GameController = (
 }
 
 const game = GameController();
+
