@@ -20,12 +20,18 @@ const Gameboard = () => {
   const putToken = (row, column, token) => {
     if (board[row][column].getValue() == 0) {
       board[row][column].addToken(token);
+      return true;
     } else {
       console.log("Cell is occupied!");
+      return false;
     }
   }
+  const printBoard = () => {
+    const boardWithCellValues = board.map((row => row.map(cell => cell.getValue())));
+    console.log(boardWithCellValues);
+  }
 
-  return {getBoard, putToken};
+  return {getBoard, putToken, printBoard};
 }
 
 const GameController = (
@@ -33,7 +39,7 @@ const GameController = (
   playerTwoName = "Player 2" 
 ) => 
 {
-  let gameBoard = Gameboard();  
+  let board = Gameboard();  
 
   const players = [
     {
@@ -52,6 +58,7 @@ const GameController = (
   let numberOfTurns = 0;
 
   const printNewRound = () => {
+    board.printBoard();
     console.log(`${activePlayer.name} turn`);
   }
 
@@ -60,28 +67,32 @@ const GameController = (
   };
   
   const playRound = (row, column) => {
-    gameBoard.putToken(row, column, getActivePlayer().token);
-    numberOfTurns++;
-    let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
-    if (isAWin) {
-      finishGame();
-    } else if (numberOfTurns >= 9) {
-      console.log("Draw!");
-    } else {
-      switchPlayerTurn();
+    let isValid = board.putToken(row, column, getActivePlayer().token);
+    console.log(`Is valid: ${isValid}`);
+    if (isValid) {
+      numberOfTurns++;
+      console.log(`Number of turns: ${numberOfTurns}`);
+      let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
+      if (isAWin) {
+        finishGame();
+      } else if (numberOfTurns >= 9) {
+        console.log("Draw!");
+      } else {
+        switchPlayerTurn();
+        
+      }
       printNewRound();
     }
-    
   }
 
   const finishGame = () => {
     console.log(`${getActivePlayer().name} won!`);
-    // gameBoard = Gameboard();
+    // board = Gameboard();
   }
 
   const checkRows = (row) => {
     for (let i = 0; i < 3; i++) {
-      if (gameBoard.getBoard()[row][i].getValue() != getActivePlayer().token) {
+      if (board.getBoard()[row][i].getValue() != getActivePlayer().token) {
         return false;
       }
     }
@@ -90,7 +101,7 @@ const GameController = (
 
   const checkColumns = (column) => {
     for (let i = 0; i < 3; i++) {
-      if (gameBoard.getBoard()[i][column].getValue() != getActivePlayer().token) {
+      if (board.getBoard()[i][column].getValue() != getActivePlayer().token) {
         return false;
       }
     }
@@ -98,41 +109,28 @@ const GameController = (
   }
 
   const checkDiagonalsLeft = () => { // from top-left to bottom-right
-      for (let i = 0; i < 3; i++) {
-        if (gameBoard.getBoard()[i][i].getValue() != getActivePlayer().token) {
-          return false;
-        }
+    for (let i = 0; i < 3; i++) {
+      if (board.getBoard()[i][i].getValue() != getActivePlayer().token) {
+        return false;
       }
-      return true;
+    }
+    return true;
   }
   
 
   const checkDiagonalsRight = () => { // from top-right to bottom-left
-      let i = 2;
-      for (let j = 0; j < 3; j++) {
-        if (gameBoard.getBoard()[i][j].getValue() != getActivePlayer().token) {
-          return false;
-        }
-        i--;
+    let i = 2;
+    for (let j = 0; j < 3; j++) {
+      if (board.getBoard()[i][j].getValue() != getActivePlayer().token) {
+        return false;
       }
-      return true;
+      i--;
+    }
+    return true;
   }
 
   printNewRound();
 
-  let display = document.querySelector('.display');
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      let cell = document.createElement('button');
-      cell.addEventListener('click', () => {
-        cell.textContent = getActivePlayer().token;
-        playRound(i, j);
-        cell.disabled = true; 
-      });
-      display.append(cell);
-    }
-  }
-  
   return {
     playRound,
     getActivePlayer
@@ -140,4 +138,3 @@ const GameController = (
 }
 
 const game = GameController();
-
