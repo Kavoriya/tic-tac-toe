@@ -18,13 +18,7 @@ const Gameboard = () => {
   }
   const getBoard = () => board;
   const putToken = (row, column, token) => {
-    if (board[row][column].getValue() == "") {
-      board[row][column].addToken(token);
-      return true;
-    } else {
-      console.log("Cell is occupied!");
-      return false;
-    }
+    board[row][column].addToken(token);
   }
   const printBoard = () => {
     const boardWithCellValues = board.map((row => row.map(cell => cell.getValue())));
@@ -127,32 +121,53 @@ const GameController = (
 
   return {
     playRound,
-    getActivePlayer
+    getActivePlayer,
+    getBoard: board.getBoard
   };
 }
 
-// const ScreenController = () => {
-//   let display = document.querySelector('.display');
-// const updateDisplay = () => {
-//   display.textContent = "";
-//   let newBoard = board.getBoard();
-//   let activePlayer = getActivePlayer();
-//   newBoard.forEach(row => {
-//     row.forEach(cell => {
-//       let button = document.createElement('button');
-//       button.textContent = cell.getValue();
-//       button.setAttribute('data-row', newBoard.indexOf(row));
-//       button.setAttribute('data-column', row.indexOf(cell));
-//       button.addEventListener('click', () => {
-//         game.playRound(button.dataset.row, button.dataset.column);
-//       })
-//       display.append(button);
-//     })
-//   });
-  
-// }
-//   updateDisplay();
-// }
+const ScreenController = (() => {
+  const game = GameController();
+  let playerTurn = document.querySelector('.player-turn');
+  let display = document.querySelector('.display');
 
-const game = GameController();
+  const updateDisplay = () => {
+    display.textContent = '';
+    playerTurn.textContent = game.getActivePlayer().name;
+
+    const board = game.getBoard();
+    board.forEach(row => {
+      row.forEach(cell => {
+        let button = document.createElement('button');
+        button.textContent = cell.getValue();
+        button.classList.add('cell');
+        button.setAttribute('data-row', board.indexOf(row));
+        button.setAttribute('data-column', row.indexOf(cell));
+        display.append(button);
+      })
+    })
+  }
+
+  const handleClickOnDisplay = (e) => {
+    const selectedRow = e.target.dataset.row;
+    const selectedColumn = e.target.dataset.column;
+    if (!selectedRow || !selectedColumn) {
+      return;
+    }
+    if (game.getBoard()[selectedRow][selectedColumn].getValue() != '') {
+      return;
+    }
+    game.playRound(selectedRow, selectedColumn);
+    updateDisplay();
+  }
+
+  display.addEventListener('click', handleClickOnDisplay);
+
+  updateDisplay();
+  
+})();
+
+
+
+
 
