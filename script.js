@@ -49,6 +49,8 @@ const GameController = (
   let activePlayer = players[0];
   const getActivePlayer = () => activePlayer;
 
+  let numberOfTurns = 0;
+
   const printNewRound = () => {
     console.log(`${activePlayer.name} turn`);
   }
@@ -59,9 +61,12 @@ const GameController = (
   
   const playRound = (row, column) => {
     gameBoard.putToken(row, column, getActivePlayer().token);
+    numberOfTurns++;
     let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
     if (isAWin) {
       finishGame();
+    } else if (numberOfTurns >= 9) {
+      console.log("Draw!");
     } else {
       switchPlayerTurn();
       printNewRound();
