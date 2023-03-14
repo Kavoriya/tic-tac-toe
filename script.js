@@ -1,5 +1,5 @@
 const Cell = () => {
-  let value = 0;
+  let value = "";
   const addToken = (token) => {
     value = token;
   }
@@ -18,7 +18,7 @@ const Gameboard = () => {
   }
   const getBoard = () => board;
   const putToken = (row, column, token) => {
-    if (board[row][column].getValue() == 0) {
+    if (board[row][column].getValue() == "") {
       board[row][column].addToken(token);
       return true;
     } else {
@@ -67,9 +67,7 @@ const GameController = (
   };
   
   const playRound = (row, column) => {
-    let isValid = board.putToken(row, column, getActivePlayer().token);
-    console.log(`Is valid: ${isValid}`);
-    if (isValid) {
+      board.putToken(row, column, getActivePlayer().token);
       numberOfTurns++;
       console.log(`Number of turns: ${numberOfTurns}`);
       let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
@@ -79,15 +77,12 @@ const GameController = (
         console.log("Draw!");
       } else {
         switchPlayerTurn();
-        
       }
       printNewRound();
-    }
   }
 
   const finishGame = () => {
     console.log(`${getActivePlayer().name} won!`);
-    // board = Gameboard();
   }
 
   const checkRows = (row) => {
@@ -117,7 +112,6 @@ const GameController = (
     return true;
   }
   
-
   const checkDiagonalsRight = () => { // from top-right to bottom-left
     let i = 2;
     for (let j = 0; j < 3; j++) {
@@ -137,4 +131,28 @@ const GameController = (
   };
 }
 
+// const ScreenController = () => {
+//   let display = document.querySelector('.display');
+// const updateDisplay = () => {
+//   display.textContent = "";
+//   let newBoard = board.getBoard();
+//   let activePlayer = getActivePlayer();
+//   newBoard.forEach(row => {
+//     row.forEach(cell => {
+//       let button = document.createElement('button');
+//       button.textContent = cell.getValue();
+//       button.setAttribute('data-row', newBoard.indexOf(row));
+//       button.setAttribute('data-column', row.indexOf(cell));
+//       button.addEventListener('click', () => {
+//         game.playRound(button.dataset.row, button.dataset.column);
+//       })
+//       display.append(button);
+//     })
+//   });
+  
+// }
+//   updateDisplay();
+// }
+
 const game = GameController();
+
