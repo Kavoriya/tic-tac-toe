@@ -136,6 +136,7 @@ const ScreenController = (() => {
   restart.addEventListener('click', () => {
     game = GameController();
     winner.textContent = '';
+    restart.textContent = 'Restart';
     updateDisplay();
   });
 
