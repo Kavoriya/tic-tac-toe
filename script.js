@@ -67,8 +67,10 @@ const GameController = (
       let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
       if (isAWin) {
         finishGame();
+        return "Finish";
       } else if (numberOfTurns >= 9) {
         console.log("Draw!");
+        return "Finish";
       } else {
         switchPlayerTurn();
       }
@@ -127,7 +129,7 @@ const GameController = (
 }
 
 const ScreenController = (() => {
-  const game = GameController();
+  let game = GameController();
   let playerTurn = document.querySelector('.player-turn');
   let display = document.querySelector('.display');
 
@@ -157,8 +159,12 @@ const ScreenController = (() => {
     if (game.getBoard()[selectedRow][selectedColumn].getValue() != '') {
       return;
     }
-    game.playRound(selectedRow, selectedColumn);
+    let isGameOver = game.playRound(selectedRow, selectedColumn);
     updateDisplay();
+    if (isGameOver == "Finish") {
+      game = GameController();
+      updateDisplay();
+    }
   }
 
   display.addEventListener('click', handleClickOnDisplay);
