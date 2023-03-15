@@ -1,3 +1,12 @@
+html {
+  font-size: 24px;
+}
+
+.player-turn {
+  font-size: 2rem;
+  text-align: center;
+}
+
 .display {
   display: grid;
   grid-template-columns: repeat(3, 100px);
@@ -8,8 +17,17 @@ button {
   font-size: 48px;
 }
 
-.restart {
-  display: block;
-  width: 300px;
-  height: 150px;
+.winner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.game {
+  display: grid;
+  grid-template-rows: 70px 300px 100px 100px;
+  grid-template-columns: 300px;
+  width: min-content;
+  margin: 0 auto;
 }
