@@ -135,6 +135,7 @@ const ScreenController = (() => {
   let playerTurn = document.querySelector('.player-turn');
   let display = document.querySelector('.display');
   let winner = document.querySelector('.winner');
+  let gameOverDiv = document.querySelector('.game-over');
 
   const updateDisplay = () => {
     display.textContent = '';
@@ -153,6 +154,21 @@ const ScreenController = (() => {
     })
   }
 
+  const handleGameOver = (message) => {
+    winner.textContent = message;
+    let gameOverButton = document.createElement('button');
+    gameOverButton.classList.add('game-over-button');
+    gameOverButton.textContent = 'Play again';
+
+    gameOverButton.addEventListener('click', () => {
+      game = GameController();
+      winner.textContent = '';
+      gameOverDiv.textContent = '';
+      updateDisplay();
+    });
+    gameOverDiv.append(gameOverButton);
+  }
+
   const handleClickOnDisplay = (e) => {
     const selectedRow = e.target.dataset.row;
     const selectedColumn = e.target.dataset.column;
@@ -163,12 +179,8 @@ const ScreenController = (() => {
       return;
     }
     let isGameOver = game.playRound(selectedRow, selectedColumn);
+    if (isGameOver != undefined) handleGameOver(isGameOver);
     updateDisplay();
-    if (isGameOver != undefined) {
-      winner.textContent = isGameOver;
-      // game = GameController();
-      updateDisplay();
-    }
   }
 
   display.addEventListener('click', handleClickOnDisplay);

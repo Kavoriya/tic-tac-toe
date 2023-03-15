@@ -9,3 +9,8 @@ button {
   height: 100px;
   font-size: 48px;
 }
+
+div.game-over button.game-over-button {
+  width: 300px;
+  height: 150px;
+}
