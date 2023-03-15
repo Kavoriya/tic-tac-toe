@@ -61,16 +61,18 @@ const GameController = (
   };
   
   const playRound = (row, column) => {
+    if (board == undefined) return;
       board.putToken(row, column, getActivePlayer().token);
       numberOfTurns++;
       console.log(`Number of turns: ${numberOfTurns}`);
       let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
       if (isAWin) {
         finishGame();
-        return "Finish";
+        board = undefined;
+        return `${getActivePlayer().name} won!`;
       } else if (numberOfTurns >= 9) {
         console.log("Draw!");
-        return "Finish";
+        return 'Draw!';
       } else {
         switchPlayerTurn();
       }
@@ -132,6 +134,7 @@ const ScreenController = (() => {
   let game = GameController();
   let playerTurn = document.querySelector('.player-turn');
   let display = document.querySelector('.display');
+  let winner = document.querySelector('.winner');
 
   const updateDisplay = () => {
     display.textContent = '';
@@ -161,8 +164,9 @@ const ScreenController = (() => {
     }
     let isGameOver = game.playRound(selectedRow, selectedColumn);
     updateDisplay();
-    if (isGameOver == "Finish") {
-      game = GameController();
+    if (isGameOver != undefined) {
+      winner.textContent = isGameOver;
+      // game = GameController();
       updateDisplay();
     }
   }
