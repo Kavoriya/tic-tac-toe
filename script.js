@@ -131,7 +131,13 @@ const ScreenController = (() => {
   let playerTurn = document.querySelector('.player-turn');
   let display = document.querySelector('.display');
   let winner = document.querySelector('.winner');
-  let gameOverDiv = document.querySelector('.game-over');
+
+  let restart = document.querySelector('.restart');
+  restart.addEventListener('click', () => {
+    game = GameController();
+    winner.textContent = '';
+    updateDisplay();
+  });
 
   const updateDisplay = () => {
     display.textContent = '';
@@ -152,17 +158,7 @@ const ScreenController = (() => {
 
   const handleGameOver = (message) => {
     winner.textContent = message;
-    let gameOverButton = document.createElement('button');
-    gameOverButton.classList.add('game-over-button');
-    gameOverButton.textContent = 'Play again';
-
-    gameOverButton.addEventListener('click', () => {
-      game = GameController();
-      winner.textContent = '';
-      gameOverDiv.textContent = '';
-      updateDisplay();
-    });
-    gameOverDiv.append(gameOverButton);
+    restart.textContent = 'Play again';
   }
 
   const handleClickOnDisplay = (e) => {
