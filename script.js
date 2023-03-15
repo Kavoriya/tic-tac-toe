@@ -1,5 +1,5 @@
 const Cell = () => {
-  let value = "";
+  let value = '';
   const addToken = (token) => {
     value = token;
   }
@@ -29,8 +29,8 @@ const Gameboard = () => {
 }
 
 const GameController = (
-  playerOneName = "Player 1",
-  playerTwoName = "Player 2" 
+  playerOneName = 'Player 1',
+  playerTwoName = 'Player 2' 
 ) => 
 {
   let board = Gameboard();  
@@ -38,11 +38,11 @@ const GameController = (
   const players = [
     {
       name: playerOneName,
-      token: "X"
+      token: 'X'
     },
     {
       name: playerTwoName,
-      token: "O"
+      token: 'O'
     }
   ];
 
@@ -62,25 +62,21 @@ const GameController = (
   
   const playRound = (row, column) => {
     if (board == undefined) return;
-      board.putToken(row, column, getActivePlayer().token);
-      numberOfTurns++;
-      console.log(`Number of turns: ${numberOfTurns}`);
-      let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
-      if (isAWin) {
-        finishGame();
-        board = undefined;
-        return `${getActivePlayer().name} won!`;
-      } else if (numberOfTurns >= 9) {
-        console.log("Draw!");
-        return 'Draw!';
-      } else {
-        switchPlayerTurn();
-      }
-      printNewRound();
-  }
-
-  const finishGame = () => {
-    console.log(`${getActivePlayer().name} won!`);
+    board.putToken(row, column, getActivePlayer().token);
+    numberOfTurns++;
+    console.log(`Number of turns: ${numberOfTurns}`);
+    let isAWin = (checkRows(row) || checkColumns(column) || checkDiagonalsLeft() || checkDiagonalsRight()) ? true : false;
+    if (isAWin) {
+      console.log(`${getActivePlayer().name} won!`);
+      board = undefined;
+      return `${getActivePlayer().name} won!`;
+    } else if (numberOfTurns >= 9) {
+      console.log('Draw!');
+      return 'Draw!';
+    } else {
+      switchPlayerTurn();
+    }
+    printNewRound();
   }
 
   const checkRows = (row) => {
